@@ -12,6 +12,8 @@ from config import *
 class SnakeRun(object):
     def __init__(self):
         pygame.display.set_caption("SNAKE CLONE")
+        self.food_sprite = pygame.image.load("./sprites/food.png")
+        self.food_sprite.set_colorkey(WHITE)
         self.block_size = BLOCK_SIZE
         self.window = pygame.display.set_mode((800,600))
         self.screen = pygame.display.get_surface()
@@ -67,12 +69,22 @@ class SnakeRun(object):
     def draw(self):
         self.screen.fill(COLOR_BG)
         self.draw_grid()
-        for p in self.snake:
+        snake_head = self.snake.head_sprite
+        if self.snake.direction == DIRECTION_DOWN:
+            snake_head = pygame.transform.flip(self.snake.head_sprite, False, True)
+        elif self.snake.direction == DIRECTION_LEFT:
+            snake_head = pygame.transform.rotate(self.snake.head_sprite, 90)
+        elif self.snake.direction == DIRECTION_RIGHT:
+            snake_head = pygame.transform.rotate(self.snake.head_sprite, 270)
+        snake_head.set_colorkey(WHITE)
+        self.screen.blit(snake_head, self.get_rect(self.snake.head()))
+        for p in list(self.snake)[1:]:
             pygame.draw.rect(self.screen, COLOR_SNAKE_OUT, self.get_rect(p))
             pygame.draw.rect(self.screen, COLOR_SNAKE_IN, pygame.Rect(p[0]*BLOCK_WIDTH+ 4, p[1]*BLOCK_HEIGHT + 4, 
                              BLOCK_WIDTH - 8, BLOCK_HEIGHT - 8))
         for f in self.food:
-            pygame.draw.rect(self.screen, COLOR_APPLE, self.get_rect(f))
+            self.screen.blit(self.food_sprite, self.get_rect(f))
+            # pygame.draw.rect(self.screen, COLOR_APPLE, self.get_rect(f))
     
     def draw_start(self):
         self.screen.fill(COLOR_BG)

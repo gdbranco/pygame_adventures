@@ -1,7 +1,10 @@
 from collections import deque
 from config import *
+import pygame
 class Snake(object):
     def __init__(self, start, length):
+        self.head_sprite = pygame.image.load("./sprites/snake_head.png")
+        self.head_sprite.set_colorkey(WHITE)
         self.speed = SNAKE_SPEED
         self.timer = 1.0 / self.speed
         self.growth_pending = 0
